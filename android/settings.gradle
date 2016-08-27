@@ -1,0 +1,3 @@
+rootProject.name = 'jumpshot3'
+
+include ':app'
