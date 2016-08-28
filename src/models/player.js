@@ -16,6 +16,9 @@ Player.createDummyData = function () {
     }),
     new Player({
       name: "luis"
+    }),
+    new Player({
+      name: "carlos"
     })
   ]
 }

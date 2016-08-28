@@ -6,42 +6,22 @@ import {
   ListView,
   TouchableHighlight
 } from 'react-native';
+import {connect} from 'react-redux';
 import Player from '../models/player';
+import _ from 'lodash';
 
 export default class PlayerSelectCell extends Component {
-  constructor(props) {
-    super(props)
-    this._teamOneSelected = this._teamOneSelected.bind(this);
-    this._teamTwoSelected = this._teamTwoSelected.bind(this);
-    this.state = {
-      teamOneActive: false,
-      teamTwoActive: false
-    }
-  }
-
-  _teamOneSelected() {
-    this.setState({
-      teamOneActive: !this.state.teamOneActive
-    })
-  }
-
-  _teamTwoSelected() {
-    this.setState({
-      teamTwoActive: !this.state.teamTwoActive
-    })
-  }
-
   render() {
     var player = this.props.player;
     return (
       <View style={styles.view}>
         <Text style={styles.playerNameText}>{player.name}</Text>
         <View style={styles.buttonContainer}>
-          <TouchableHighlight style={styles.button} onPress={this._teamOneSelected}>
-            <Text style={[styles.buttonText, this.state.teamOneActive && styles.buttonSelectTeam1]}>Team 1</Text>
+          <TouchableHighlight style={styles.button} onPress={this.props.touchButtonTeamOne}>
+            <Text style={[styles.buttonText, this.props.onTeamOne && styles.buttonSelectTeam1]}>Team 1</Text>
           </TouchableHighlight>
-          <TouchableHighlight style={styles.button} onPress={this._teamTwoSelected}>
-            <Text style={[styles.buttonText, this.state.teamTwoActive && styles.buttonSelectTeam2]}>Team 2</Text>
+          <TouchableHighlight style={styles.button} onPress={this.props.touchButtonTeamTwo}>
+            <Text style={[styles.buttonText, this.props.onTeamTwo && styles.buttonSelectTeam2]}>Team 2</Text>
           </TouchableHighlight>
         </View>
       </View>
@@ -84,3 +64,24 @@ const styles = StyleSheet.create({
     backgroundColor: 'green'
   }
 })
+
+const mapStateToProps = (state, ownProps) => {
+  var playerRow = parseInt(ownProps.playerRow);
+  return {
+    onTeamOne: (state.teamOne.indexOf(playerRow) >= 0),
+    onTeamTwo: (state.teamTwo.indexOf(playerRow) >= 0)
+  }
+}
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    touchButtonTeamOne: (event) => {
+      dispatch({type: "SELECT_TEAM_ONE", playerRow: ownProps.playerRow})
+    },
+    touchButtonTeamTwo: (event) => {
+      dispatch({type: "SELECT_TEAM_TWO", playerRow: ownProps.playerRow})
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(PlayerSelectCell);

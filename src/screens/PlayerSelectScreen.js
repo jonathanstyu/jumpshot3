@@ -7,12 +7,13 @@ import {
 } from 'react-native';
 import Player from '../models/player';
 import PlayerSelectCell from './PlayerSelectCell';
+import {connect} from 'react-redux';
 
-export default class PlayerSelectScreen extends Component {
+class PlayerSelectScreen extends Component {
   constructor(props) {
     super(props)
     var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-    var players = Player.createDummyData();
+    var players = this.props.players;
     this._renderRow = this._renderRow.bind(this);
     this.state = {
       dataSource: ds.cloneWithRows(players),
@@ -20,9 +21,9 @@ export default class PlayerSelectScreen extends Component {
     }
   }
 
-  _renderRow(rowData) {
+  _renderRow(rowData, sectionID: number, rowID: number) {
     return (
-      <PlayerSelectCell player={rowData}/>
+      <PlayerSelectCell player={rowData} playerRow={rowID}/>
     )
   }
 
@@ -53,3 +54,17 @@ const styles = StyleSheet.create({
     height: 1
   }
 })
+
+const mapStateToProps = (state) => {
+  return {
+    players: state.players
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(PlayerSelectScreen);

@@ -6,11 +6,15 @@ import {
   View
 } from 'react-native';
 import App from './src/app';
+import {Provider} from 'react-redux';
+import store from './src/jumpApp';
 
 class jumpshot3 extends Component {
   render() {
     return (
-      <App />
+      <Provider store={store}>
+        <App />
+      </Provider>
     );
   }
 }
